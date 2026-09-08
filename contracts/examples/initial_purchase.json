@@ -1,0 +1,21 @@
+{
+  "event_id": "01JQZ8K3W4A0000000000001",
+  "event_ts": "2026-09-08T12:00:00.000Z",
+  "app_id": "app_fitness",
+  "customer_id": "cust_8f2c1a",
+  "subscription_id": "sub_2b91ff",
+  "event_type": "INITIAL_PURCHASE",
+  "product_id": "premium_annual",
+  "period_type": "NORMAL",
+  "duration": "P1Y",
+  "store": "APP_STORE",
+  "country": "PL",
+  "currency": "PLN",
+  "price": 199.99,
+  "price_usd": 49.90,
+  "proceeds_usd": 42.41,
+  "period_start": "2026-09-08T12:00:00.000Z",
+  "period_end": "2027-09-08T12:00:00.000Z",
+  "cancel_reason": null,
+  "acquisition_channel": "organic"
+}

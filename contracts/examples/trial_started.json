@@ -1,0 +1,21 @@
+{
+  "event_id": "01JQZ8K3W4A0000000000002",
+  "event_ts": "2026-09-01T09:15:00.000Z",
+  "app_id": "app_fitness",
+  "customer_id": "cust_44de07",
+  "subscription_id": "sub_71ac30",
+  "event_type": "TRIAL_STARTED",
+  "product_id": "premium_monthly",
+  "period_type": "TRIAL",
+  "duration": "P7D",
+  "store": "PLAY_STORE",
+  "country": "DE",
+  "currency": "EUR",
+  "price": 0,
+  "price_usd": 0,
+  "proceeds_usd": 0,
+  "period_start": "2026-09-01T09:15:00.000Z",
+  "period_end": "2026-09-08T09:15:00.000Z",
+  "cancel_reason": null,
+  "acquisition_channel": "paid_social"
+}

@@ -1,0 +1,129 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_VERSION: "0.8.15"
+
+jobs:
+  api:
+    name: api — lint, types, unit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: api/pyproject.toml
+
+      - run: uv python install 3.13
+      - run: uv sync
+
+      - name: Lint
+        run: uv run ruff check --output-format=github .
+
+      - name: Format
+        run: uv run ruff format --check .
+
+      - name: Type-check
+        run: uv run mypy src tests
+
+      - name: Unit tests
+        run: uv run pytest -m "not integration" --cov=riffle --cov-report=term-missing
+
+  web:
+    name: web — lint, types, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+
+  contracts:
+    name: contracts — schema and examples agree
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install --quiet "jsonschema>=4.23"
+      - name: Validate every example against the schema
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          from jsonschema import Draft202012Validator
+
+          schema = json.loads(pathlib.Path("contracts/subscription-event.schema.json").read_text())
+          Draft202012Validator.check_schema(schema)
+          validator = Draft202012Validator(schema)
+
+          failed = False
+          for example in sorted(pathlib.Path("contracts/examples").glob("*.json")):
+              errors = sorted(validator.iter_errors(json.loads(example.read_text())), key=str)
+              for error in errors:
+                  failed = True
+                  print(f"{example.name}: {error.json_path} — {error.message}")
+              if not errors:
+                  print(f"{example.name}: ok")
+          sys.exit(1 if failed else 0)
+          PY
+
+  integration:
+    name: integration — Redpanda to ClickHouse
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: api/pyproject.toml
+
+      - run: uv python install 3.13
+
+      - name: Start Redpanda and ClickHouse
+        run: make up   # also creates the topic — the proxy will not auto-create it
+
+      - name: Install API
+        working-directory: api
+        run: uv sync
+
+      - name: Apply migrations
+        working-directory: api
+        run: uv run riffle-migrate --dir ../clickhouse/migrations
+
+      - name: Integration tests
+        working-directory: api
+        run: uv run pytest -m integration
+
+      - name: Service logs
+        if: failure()
+        run: docker compose logs --no-color --tail=200

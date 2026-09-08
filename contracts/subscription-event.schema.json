@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dawidprkk/riffle/contracts/subscription-event.schema.json",
+  "title": "Subscription lifecycle event",
+  "description": "One event on topic subscription.events.v1. Delivery is at-least-once and unordered; an event may arrive long after its event_ts. Consumers must tolerate all three.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id", "event_ts", "app_id", "customer_id", "subscription_id",
+    "event_type", "product_id", "period_type", "store", "country",
+    "currency", "price", "price_usd", "proceeds_usd", "period_start"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Idempotency key. Stable across redelivery: two events with this id are the same event."
+    },
+    "event_ts": {
+      "type": "string", "format": "date-time",
+      "description": "When the event happened at the store. Not when it arrived."
+    },
+    "app_id": { "type": "string", "minLength": 1 },
+    "customer_id": { "type": "string", "minLength": 1 },
+    "subscription_id": {
+      "type": "string", "minLength": 1,
+      "description": "Stable across renewals — the original transaction identity."
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "INITIAL_PURCHASE", "TRIAL_STARTED", "TRIAL_CONVERTED", "TRIAL_CANCELLED",
+        "RENEWAL", "CANCELLATION", "UNCANCELLATION", "BILLING_ISSUE",
+        "GRACE_PERIOD_ENTERED", "GRACE_PERIOD_RECOVERED", "EXPIRATION",
+        "PRODUCT_CHANGE", "REFUND", "TRANSFER"
+      ]
+    },
+    "product_id": { "type": "string", "minLength": 1 },
+    "period_type": { "type": "string", "enum": ["TRIAL", "INTRO", "NORMAL"] },
+    "duration": {
+      "type": ["string", "null"],
+      "pattern": "^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+W)?(?:\\d+D)?$",
+      "description": "ISO-8601 duration of the billing period. Null for lifetime purchases, which are excluded from MRR."
+    },
+    "store": { "type": "string", "enum": ["APP_STORE", "PLAY_STORE", "STRIPE"] },
+    "country": { "type": "string", "pattern": "^[A-Z]{2}$" },
+    "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+    "price": { "type": "number", "minimum": 0 },
+    "price_usd": { "type": "number", "minimum": 0 },
+    "proceeds_usd": {
+      "type": "number", "minimum": 0,
+      "description": "Net of store commission. This, not price, is what MRR is built from."
+    },
+    "period_start": { "type": "string", "format": "date-time" },
+    "period_end": { "type": ["string", "null"], "format": "date-time" },
+    "cancel_reason": {
+      "type": ["string", "null"],
+      "enum": ["VOLUNTARY", "BILLING_ERROR", "CUSTOMER_SUPPORT", "UNKNOWN", null],
+      "description": "Set on CANCELLATION and EXPIRATION. BILLING_ERROR is what separates involuntary churn from voluntary."
+    },
+    "acquisition_channel": { "type": ["string", "null"] }
+  }
+}
