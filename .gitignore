@@ -1,34 +1,125 @@
+# ---- Secrets and local configuration ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+credentials.json
+service-account*.json
+.netrc
+secrets/
+
 # ---- Python ----
 __pycache__/
 *.py[cod]
-*.egg-info/
-.eggs/
+*$py.class
+*.so
+.Python
 build/
 dist/
+sdist/
+wheels/
+*.egg
+*.egg-info/
+.eggs/
+.installed.cfg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
 .venv/
 venv/
+env/
+ENV/
+.tox/
+.nox/
 .pytest_cache/
 .mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
 .ruff_cache/
+.hypothesis/
 .coverage
+.coverage.*
 coverage.xml
 htmlcov/
+nosetests.xml
+junit.xml
+.ipynb_checkpoints/
+cython_debug/
 
 # ---- Node ----
 node_modules/
+jspm_packages/
 web/dist/
+dist-ssr/
 *.tsbuildinfo
-npm-debug.log*
+.npm
 .eslintcache
+.stylelintcache
+.yarn/cache
+.yarn/install-state.gz
+.pnp.*
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.parcel-cache/
+.vite/
+.turbo/
+coverage/
 
-# ---- Local state ----
-.env
-.env.local
+# ---- Local state and data ----
 data/
 .docker/
+*.log
+logs/
+tmp/
+*.pid
+*.seed
+*.sqlite
+*.sqlite3
+*.db
 
-# ---- Editors / OS ----
-.DS_Store
+# ---- Editors and IDEs ----
 .idea/
 .vscode/
+!.vscode/extensions.json
+*.sublime-project
+*.sublime-workspace
+.fleet/
+.zed/
 *.swp
+*.swo
+*~
+.\#*
+\#*\#
+
+# ---- OS ----
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.DocumentRevisions-V100
+.fseventsd
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ---- Claude / agent scratch ----
+.claude/
+CLAUDE.local.md
