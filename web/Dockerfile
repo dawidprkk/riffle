@@ -1,6 +1,6 @@
 # Development server. A production build would be `npm run build` served by nginx;
 # for the demo the dev server is the point — it hot-reloads while you explore.
-FROM node:24-alpine
+FROM node:26-alpine
 
 WORKDIR /app
 COPY package.json package-lock.json* ./
