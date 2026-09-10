@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  UV_VERSION: "0.8.15"
+  UV_VERSION: "0.12.12"
 
 jobs:
   api:
@@ -54,7 +54,7 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: "22"
+          node-version: "24"
           cache: npm
           cache-dependency-path: web/package-lock.json
 
