@@ -33,7 +33,7 @@ services:
       - redpanda-data:/var/lib/redpanda/data
 
   clickhouse:
-    image: clickhouse/clickhouse-server:25.8
+    image: clickhouse/clickhouse-server:26.8
     container_name: riffle-clickhouse
     depends_on:
       redpanda:
