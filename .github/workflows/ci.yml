@@ -28,7 +28,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: api/pyproject.toml
 
-      - run: uv python install 3.13
+      - run: uv python install 3.14
       - run: uv sync
 
       - name: Lint
@@ -107,7 +107,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: api/pyproject.toml
 
-      - run: uv python install 3.13
+      - run: uv python install 3.14
 
       - name: Start Redpanda and ClickHouse
         run: make up   # also creates the topic — the proxy will not auto-create it
