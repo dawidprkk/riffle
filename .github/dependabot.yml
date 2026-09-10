@@ -1,8 +1,12 @@
 version: 2
 updates:
+  # Grouped: four separate action bumps in one week was noise, not signal.
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: monthly }
+    groups:
+      actions:
+        patterns: ["*"]
 
   - package-ecosystem: uv
     directory: /api
@@ -17,4 +21,14 @@ updates:
 
   - package-ecosystem: docker-compose
     directory: /
+    schedule: { interval: monthly }
+
+  # The Dockerfiles are a separate ecosystem from docker-compose. Without these
+  # two blocks the base images (python, node, uv) are never checked at all.
+  - package-ecosystem: docker
+    directory: /api
+    schedule: { interval: monthly }
+
+  - package-ecosystem: docker
+    directory: /web
     schedule: { interval: monthly }
