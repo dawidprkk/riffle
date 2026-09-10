@@ -1,0 +1,9 @@
+# The web image builds with `context: ./web`, so Docker reads this file and not
+# the root .dockerignore. Without it `COPY . .` overwrites the node_modules that
+# `npm install` just built with the host's, dragging platform-specific binaries
+# (rollup, esbuild) from macOS into a linux-musl image.
+node_modules
+dist
+.env
+.env.*
+npm-debug.log*
