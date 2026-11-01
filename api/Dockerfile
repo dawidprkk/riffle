@@ -1,5 +1,5 @@
 # Build context is the repository root (see docker-compose.yml).
-FROM python:3.14-slim
+FROM python:3.15-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
